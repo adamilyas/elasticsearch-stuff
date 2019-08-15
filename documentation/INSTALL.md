@@ -1,5 +1,13 @@
 # Setting up ElasticSearch and Kibana
 
+We aim to setup elasticsearch (ES) and kibana on centOS machine using RPM package manager by
+- Downloading and installing ES rpm
+- Edit ES yml file
+- Enable and run ES service via systemd
+- Downloading and installing kibana rpm
+- Edit kibana yml file
+- Enable and run kibana service via systemd
+
 ## Elasticsearch Installation (centOS)
 
 Download and install the RPM manually for
