@@ -104,16 +104,18 @@ Example
 
 ```
 POST _bulk
-{ "index" : { "_index" : "test", "_id" : "1" } }
-{ "field1" : "value1" }
+{ "index" : { "_index" : "features", "_id" : "1" } }
+{ "field1" : "value1", "field2" : "value2" }
+{ "index" : { "_index" : "features", "_id" : "2" } }
+{ "field1" : "value1", "field2" : "value2" }
 ```
 For the case of bulk sending `netflow` data, 
 ```
 POST _bulk
 {"index": {"_index": "netflow"}}
-{"Attack": 0.1, "DEST_CUSTOMER": 763, "DST_AS": 29684, "EXPORTER_IPV4_ADDRESS": "9.11.178.7", "FIRST_SWITCHED": 1543622413, "INPUT_SNMP": 12, "IN_BYTES": 144, "IN_PKTS_COUNT": 3, "IPV4_DST_ADDR": "9.11.190.81", "IPV4_DST_MASK": 29, "IPV4_SRC_ADDR": "0.115.66.205", "IPV4_SRC_MASK": 0, "L4_DST_PORT": 41098, "L4_SRC_PORT": 33358, "LAST_SWITCHED": 1543622422, "OUTPUT_SNMP": 9, "OUT_BYTES": 0, "OUT_PKTS_COUNT": 0, "PACKET_SIZE": 48.0, "PROTOCOL": 17, "SRC_AS": 39386, "SRC_CUSTOMER": -1, "TCP_FLAGS": 0, "dest_country": "United States", "dest_location": "37.75,-97.82", "record_time": "2018-12-01 00:00:00", "src_country": NaN, "src_location": NaN}
+    {"Attack": 0.1, "DEST_CUSTOMER": 763, "DST_AS": 29684 ... }
 {"index": {"_index": "netflow"}}
-{"Attack": 0.627, "DEST_CUSTOMER": 1305, "DST_AS": 29684, "EXPORTER_IPV4_ADDRESS": "9.11.178.7", "FIRST_SWITCHED": 1543622382, "INPUT_SNMP": 12, "IN_BYTES": 123, "IN_PKTS_COUNT": 1, "IPV4_DST_ADDR": "9.11.190.81", "IPV4_DST_MASK": 29, "IPV4_SRC_ADDR": "1.174.56.5", "IPV4_SRC_MASK": 0, "L4_DST_PORT": 771, "L4_SRC_PORT": 0, "LAST_SWITCHED": 1543622382, "OUTPUT_SNMP": 9, "OUT_BYTES": 0, "OUT_PKTS_COUNT": 0, "PACKET_SIZE": 123.0, "PROTOCOL": 1, "SRC_AS": 39386, "SRC_CUSTOMER": -1, "TCP_FLAGS": 0, "dest_country": "United States", "dest_location": "37.75,-97.82", "record_time": "2018-12-01 00:00:00", "src_country": "Taiwan", "src_location": "23.5,121.0"}
+{"Attack": 0.627, "DEST_CUSTOMER": 1305, "DST_AS": 29684 ... }
 ...
 ```
 The each line in the data here is seperated by a newline `\n`. We sent this data in the same way we have been sending our json. Here, we declare it as the variable `data_to_post`
@@ -129,3 +131,18 @@ to_send = [row.to_dict() for i, row in df.iterrows()]
 data_to_post = f"{action}\n" + f"\n{action}\n".join(json.dumps(d) for d in to_send)+ "\n"
 r = requests.post(url=f"{ADDR}/_bulk?pretty", data=data_to_post, headers=headers)
 ```
+
+## Managing Indices
+
+1. Go to `Management` and `Index patterns`
+2. Select `Create index pattern` on the top right hand corner and press `Next step` on the right
+3. Specify Time Filter Field to be `record_time` so that we can filter by time range of the record time
+4. Create Index Pattern
+
+![Index Management](./assets/index1.png)
+
+![Create Index Pattern](./assets/index2.png)
+
+![Specify Time Filter Field](./assets/index3.png)
+
+Now you are able to go to `discover` page and see your data
